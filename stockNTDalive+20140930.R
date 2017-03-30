@@ -139,7 +139,24 @@ while(k<=N)
   # collect alpha, alpha's p-value, beta, beta's p-value, 
   #         dummybeta, dummybeta's p-value, R-squared and observations
   #**********************************************************************************
-  trylm<-lm(tmv[,"Cont.ri-rf"]~tmv[,"Cont.rm-rf"]+tmv[,"Dummybeta"])
+    
+  # Create X2=dummybeta
+  i<-2
+  while(i<=length(tmv[,"Date"]))
+  {
+    if(tmv[i,"Cont.rm-rf"]>0)
+    {
+      tmv[i,11]<-1*tmv[i,"Cont.rm-rf"]
+    }
+    else
+    {
+      tmv[i,11]<-0
+    }
+    i<-i+1
+  }
+  colnames(tmv)[11]<-"Dummybeta2"
+  
+  trylm<-lm(tmv[,"Cont.ri-rf"]~tmv[,"Cont.rm-rf"]+tmv[,"Dummybeta2"])
   summary(trylm)
   resultsDummy2[j,"alpha"]<-summary(trylm)$coefficients[1,1]
   resultsDummy2[j,"alphapv"]<-summary(trylm)$coefficients[1,4]
